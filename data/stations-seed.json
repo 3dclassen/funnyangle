@@ -1,0 +1,553 @@
+{
+  "routes": [
+    {
+      "id": "route-altona-stpauli",
+      "name": "Punk & Geschichte — Altona bis St. Pauli",
+      "city": "Hamburg",
+      "description": "Von der Haustür durch die Subkultur-Geschichte Hamburgs. Punk, Hausbesetzungen, Konzertlegenden und ein paar Totenschädel.",
+      "tags": ["punk", "musik", "geschichte", "politik"],
+      "total_duration_minutes": 330,
+      "distance_km": 5.2,
+      "start_station_id": "station-fabrik"
+    },
+    {
+      "id": "route-psychedelisch",
+      "name": "Weird & Psychedelisch — Visuelle Überwältigung",
+      "city": "Hamburg",
+      "description": "Orte, an denen das Gehirn kurz aussetzt. Architektur als Droge, Symmetrie als Schwindel, Stille als Desorientierung.",
+      "tags": ["psychedelisch", "architektur", "weird", "natur"],
+      "total_duration_minutes": 240,
+      "distance_km": 8.5,
+      "start_station_id": "station-chilehaus"
+    }
+  ],
+
+  "stations": [
+
+    {
+      "id": "station-fabrik",
+      "route_id": "route-altona-stpauli",
+      "order": 1,
+      "name": "FABRIK Hamburg",
+      "address": "Barnerstraße 36, 22765 Hamburg",
+      "lat": 53.5565957,
+      "lng": 9.9289876,
+      "tags": ["punk", "musik", "geschichte"],
+      "type": "location",
+      "description_short": "Ältestes Kulturzentrum Deutschlands. Nirvana spielten hier 1989 — noch vor Nevermind.",
+      "duration_minutes": 15,
+      "opening_hours": "Außenansicht jederzeit zugänglich",
+      "image_url": "",
+      "anecdotes": [
+        {
+          "title": "Nirvana, 13. November 1989",
+          "text": "Nirvana spielten am 13. November 1989 in der Fabrik — noch vor Nevermind, noch vor dem Ruhm. Die Setlist existiert noch: School, Love Buzz, Floyd the Barber, Polly, Negative Creep. Bassist Krist Novoselic sagte ans Mikro: 'Drink a beer or wine or a whisky, any kind of altered consciousness stuff, drink up!' Die Aufnahme gibt es online. Daneben standen auch Simple Minds hier für ihr erstes Konzert außerhalb Großbritanniens auf der Bühne — und B.B. King, Miles Davis, Meat Loaf."
+        },
+        {
+          "title": "Brand und Wiederaufbau",
+          "text": "1977 brannte die Fabrik vollständig ab. Statt Abriss: Wiederaufbau nach Originalprinzip, fertig 1979. Der alte Kran über dem Eingang ist bis heute geblieben — als Mahnmal an die industrielle Vergangenheit des Gebäudes, das ursprünglich 1899 als Maschinenteilfabrik gebaut wurde."
+        },
+        {
+          "title": "Punk gegen die Wiedervereinigung",
+          "text": "Am 2. Oktober 1990, dem Tag nach der Deutschen Einheit, veranstaltete die Fabrik ein Konzert unter dem Titel 'Widerliche Vereinigung'. 1.200 bis 1.500 Besucher, vier Punk- und Rockbands. Draußen standen 500 Polizisten mit vier Wasserwerfern und verhinderten eine spontane Demo der Konzertgäste."
+        }
+      ],
+      "quiz_question": {
+        "question": "In welchem Jahr spielten Nirvana in der Fabrik Hamburg?",
+        "options": ["1987", "1989", "1991", "1993"],
+        "correct_index": 1,
+        "explanation": "Nirvana spielten am 13. November 1989 in der Fabrik — zwei Jahre vor Nevermind und dem Weltruhm."
+      }
+    },
+
+    {
+      "id": "station-schilleroper",
+      "route_id": "route-altona-stpauli",
+      "order": 2,
+      "name": "Schilleroper",
+      "address": "Max-Brauer-Allee 76, 22767 Hamburg",
+      "lat": 53.558012,
+      "lng": 9.9617698,
+      "tags": ["weird", "architektur", "lost-place", "geschichte"],
+      "type": "location",
+      "description_short": "Denkmalgeschützter Rundbau von 1891, komplett graffitiert, seit Jahrzehnten leer. Die runde Form hat 130 Jahre alle Umnutzungspläne vereitelt.",
+      "duration_minutes": 10,
+      "opening_hours": "Außenansicht jederzeit zugänglich",
+      "image_url": "",
+      "anecdotes": [
+        {
+          "title": "Pferde in der Oper",
+          "text": "Das Gebäude wurde 1889–1891 für den Circus Busch erbaut, Kapazität 3.000 Zuschauer. Es gab eine Rotunde mit Holzspänen, in der Artisten auf Pferden ritten während das Programm lief. Danach: Varieté, Oper, Bomben, Verfall, Vergessen."
+        },
+        {
+          "title": "Zu rund für alles",
+          "text": "Die runde Form hat 130 Jahre alle Umnutzungspläne vereitelt. Kino? Zu rund. Theater? Zu rund. Supermarkt? Zu rund. Das Bezirksamt bestand auf der Grünflächenausweisung im Bebauungsplan — gebaut wird also auch nichts. Der Bau steht da und verfällt in seiner eigenen, unnützen Schönheit."
+        }
+      ],
+      "quiz_question": {
+        "question": "Wofür wurde die Schilleroper ursprünglich gebaut?",
+        "options": ["Als Oper für Wagner-Stücke", "Als Zirkus für Circus Busch", "Als Markthalle", "Als Militärdepot"],
+        "correct_index": 1,
+        "explanation": "1891 für Circus Busch eröffnet — mit Pferden in der Manege während das Publikum zusah. Erst später wurde daraus ein Varieté, dann eine Oper."
+      }
+    },
+
+    {
+      "id": "station-pudel",
+      "route_id": "route-altona-stpauli",
+      "order": 3,
+      "name": "Golden Pudel Club",
+      "address": "St. Pauli Fischmarkt 27, 20359 Hamburg",
+      "lat": 53.5462322,
+      "lng": 9.9578019,
+      "tags": ["punk", "musik", "geschichte", "politik"],
+      "type": "location",
+      "description_short": "Ehemaliges Schmugglergefängnis von 1872. Seit 1994 einer der wichtigsten Underground-Clubs Deutschlands.",
+      "duration_minutes": 15,
+      "opening_hours": "Außenansicht jederzeit. Club: Mi–So ab 21 Uhr",
+      "image_url": "",
+      "anecdotes": [
+        {
+          "title": "Die Valentinsnacht des Brands",
+          "text": "In der Nacht zum 14. Februar 2016 — Valentinstag — brannte der Golden Pudel Club. 150 Gäste konnten sich unverletzt ins Freie retten. Brandstiftung wird vermutet, der Täter wurde nie gefasst. Danach: Einsturzgefahr, Schließung, Streit zwischen den Eigentümern. Ein Miteigentümer wollte das Haus abreißen und meistbietend versteigern. 2.500 Menschen gingen für den Pudel auf die Straße."
+        },
+        {
+          "title": "Die Toten Hosen als stille Geldgeber",
+          "text": "Wer den Wiederaufbau mitfinanziert hat, war lange nicht bekannt. Erst 2023 erzählte Campino in einem Podcast beiläufig davon: Die Toten Hosen haben den Golden Pudel Club jahrelang finanziell unterstützt. Kein PR, keine Pressekonferenz. Einfach Geld überwiesen."
+        },
+        {
+          "title": "Gerettet von einer Institution aus dem 18. Jahrhundert",
+          "text": "Den Pudel vor der Zwangsversteigerung gerettet hat letztendlich die Patriotische Gesellschaft von 1765 — eine der ältesten Bürgergesellschaften Hamburgs. Rocko Schamoni übertrug seinen Anteil an die von ihr verwaltete Golden Pudel Stiftung. Ein Punk-Club in der Hand einer Institution, die älter ist als die USA."
+        }
+      ],
+      "quiz_question": {
+        "question": "Was war das Gebäude des Golden Pudel Clubs ursprünglich?",
+        "options": ["Eine Fischräucherei", "Ein Schmugglergefängnis", "Ein Zollhaus", "Eine Fischauktionshalle"],
+        "correct_index": 1,
+        "explanation": "Das Gebäude stammt von 1872 und war ursprünglich ein Schmugglergefängnis — direkt am Wasser, damit man Schmuggler vom Hafen aus direkt einsperren konnte."
+      }
+    },
+
+    {
+      "id": "station-park-fiction",
+      "route_id": "route-altona-stpauli",
+      "order": 4,
+      "name": "Park Fiction",
+      "address": "Pinnasberg 4, 20359 Hamburg",
+      "lat": 53.5462095,
+      "lng": 9.9572961,
+      "tags": ["punk", "kunst", "politik", "weird"],
+      "type": "location",
+      "description_short": "Kein normaler Park. 1994 von Anwohnern erkämpft statt Hochhausbebauung. Fliegende Palmen, surreale Skulpturen, bester Elbblick.",
+      "duration_minutes": 15,
+      "opening_hours": "24/7 zugänglich",
+      "image_url": "",
+      "anecdotes": [
+        {
+          "title": "Die kollektive Wunschproduktion",
+          "text": "Anfang der 1990er sollte am Pinnasberg gebaut werden — Hochhäuser, Büros, Investoren. Die Anwohner lehnten ab und entwickelten ab 1995 völlig unabhängig von Politik und Behörden einen eigenen Planungsprozess. Sie nannten ihn 'Kollektive Wunschproduktion'. Jeder konnte einreichen was er sich für diesen Ort wünscht. Fragebogen, Workshops, Ausstellungen. Daraus wurde der Park."
+        },
+        {
+          "title": "Das Kunstbudget, das kollektiviert wurde",
+          "text": "Das Kunstbudget der Hamburger Kulturbehörde — 120.000 DM für eine klassische Kunstinstallation — wurde vollständig kollektiviert und in den Planungsprozess investiert. Die Künstler Christoph Schäfer und Cathy Skene verzichteten auf ein persönliches Werk. Das Projekt bezieht sich auf die Theorien der Situationisten und auf Joseph Beuys' Begriff der 'Sozialen Plastik'. Der Park ist das Kunstwerk."
+        }
+      ],
+      "quiz_question": {
+        "question": "Was sollte ursprünglich auf dem Gelände des Park Fiction gebaut werden?",
+        "options": ["Ein Fußballstadion", "Ein Supermarkt", "Hochhäuser und Büros", "Ein Parkhaus"],
+        "correct_index": 2,
+        "explanation": "Anfang der 1990er planten Investoren Hochhäuser und Büros. Die Anwohner entwickelten stattdessen eine eigene Planung — die 'Kollektive Wunschproduktion' — und erkämpften den Park."
+      }
+    },
+
+    {
+      "id": "station-hafenstrasse",
+      "route_id": "route-altona-stpauli",
+      "order": 5,
+      "name": "Hafenstraße 116–126",
+      "address": "St. Pauli-Hafenstraße 116, 20359 Hamburg",
+      "lat": 53.5465693,
+      "lng": 9.9605534,
+      "tags": ["punk", "politik", "geschichte"],
+      "type": "location",
+      "description_short": "Die besetzten Häuser. 1981 bis 1987 Hamburgs härtester Konflikt. Die NYT titelte: 'Squatters Win! (A Checkbook Did It)'",
+      "duration_minutes": 10,
+      "opening_hours": "Außenansicht jederzeit",
+      "image_url": "",
+      "anecdotes": [
+        {
+          "title": "Die Barrikaden-Tage von 1987",
+          "text": "Ab Oktober 1981 hatten Jugendliche die leerstehenden Häuser besetzt. Im November 1987 eskalierte es: Stahltüren, NATO-Draht an den Fenstern, meterhohe Barrikaden. 10.000 Polizisten standen bereit, die GSG 9 war geordert. Die Presse sprach von bürgerkriegsähnlichen Zuständen. Dann, im Morgennebel des 18. November 1987, begannen vermummte Personen still mit dem Abbau der Barrikaden."
+        },
+        {
+          "title": "Das 24-Stunden-Ultimatum",
+          "text": "Bürgermeister Klaus von Dohnanyi stellte ein Ultimatum: Barrikaden weg in 24 Stunden, dann gibt es einen Pachtvertrag. Nicht wenige Besetzer vermuteten eine Falle. Am Ende akzeptierten sie. Keine zwei Stunden nach Ablauf des Ultimatums stimmte der Senat dem Pachtvertrag zu. Die New York Times titelte: 'Squatters Win! (A Checkbook Did It)'."
+        },
+        {
+          "title": "Die erste Bühne der Goldenen Zitronen",
+          "text": "Im September 1984 spielten die Goldenen Zitronen ihr allererstes Hamburg-Konzert in einem kleinen Laden in der Hafenstraße. Kapazität: 60 Leute. Danach spielten sie regelmäßig für die Bewohner der besetzten Häuser in der Volksküche direkt daneben."
+        }
+      ],
+      "quiz_question": {
+        "question": "Was titelte die New York Times über den Hafenstraßen-Konflikt?",
+        "options": [
+          "'Hamburg's Civil War'",
+          "'Squatters Win! (A Checkbook Did It)'",
+          "'Punks Take the Port'",
+          "'Hamburg Burns'"
+        ],
+        "correct_index": 1,
+        "explanation": "Die NYT titelte 'Squatters Win! (A Checkbook Did It)' — weil Bürgermeister Dohnanyi den Streit letztendlich mit einem Pachtvertrag löste statt mit Polizeigewalt."
+      }
+    },
+
+    {
+      "id": "station-strandpauli",
+      "route_id": "route-altona-stpauli",
+      "order": 6,
+      "name": "StrandPauli",
+      "address": "St. Pauli Hafenstraße 89, 20359 Hamburg",
+      "lat": 53.546074,
+      "lng": 9.961645,
+      "tags": ["pause", "essen-trinken"],
+      "type": "venue",
+      "description_short": "Strandbar direkt an der Elbe. Astra vom Fass, Feuertonnen, Elbblick. Erste Bier-Pause der Route.",
+      "duration_minutes": 45,
+      "opening_hours": "Täglich, wetterabhängig ab ~11 Uhr",
+      "image_url": "",
+      "anecdotes": [],
+      "quiz_question": null
+    },
+
+    {
+      "id": "station-molotow",
+      "route_id": "route-altona-stpauli",
+      "order": 7,
+      "name": "Molotow",
+      "address": "Reeperbahn 136, 20359 Hamburg",
+      "lat": 53.5497031,
+      "lng": 9.9595447,
+      "tags": ["punk", "musik", "geschichte"],
+      "type": "location",
+      "description_short": "Seit 1960 Livemusik an dieser Adresse. The White Stripes, The Killers, Nirvana — alle hier bevor sie berühmt wurden.",
+      "duration_minutes": 10,
+      "opening_hours": "Außenansicht jederzeit. Club: Konzertabende",
+      "image_url": "",
+      "anecdotes": [
+        {
+          "title": "Die Nacht der wackelnden Wände",
+          "text": "Am 14. Dezember 2013 spielte Madsen ein ausverkauftes Konzert. Plötzlich stand die Polizei in der Tür — mehrere Bewohner der Esso-Häuser nebenan hatten gemeldet, die Wände würden wackeln. Das Molotow wurde sofort evakuiert. Der damalige Barkeeper steckte noch schnell ein paar Sektflaschen ein. Danach folgten drei Umzüge durch die Stadt in zehn Jahren."
+        },
+        {
+          "title": "Bevor sie berühmt wurden",
+          "text": "The White Stripes, The Hives, The Killers, Mumford & Sons, Billy Talent — alle im Molotow, bevor irgendjemand sie kannte. Das ist das eigentliche Geschäftsmodell: Bands reinkommen lassen wenn sie noch passen, und schauen wer davon Weltkarriere macht."
+        }
+      ],
+      "quiz_question": {
+        "question": "Was passierte beim Molotow-Konzert im Dezember 2013?",
+        "options": [
+          "Ein Feuer brach aus",
+          "Die Band spielte 5 Stunden",
+          "Das Konzert wurde wegen wackelnder Esso-Häuser evakuiert",
+          "Der Club wurde geschlossen"
+        ],
+        "correct_index": 2,
+        "explanation": "Mitten im Madsen-Konzert meldeten Nachbarn, dass die Wände der Esso-Häuser nebenan wackelten — einsturzgefährdet. Das Molotow musste sofort evakuiert werden."
+      }
+    },
+
+    {
+      "id": "station-grosse-freiheit",
+      "route_id": "route-altona-stpauli",
+      "order": 8,
+      "name": "Große Freiheit & St. Joseph-Krypta",
+      "address": "Große Freiheit 43, 22767 Hamburg",
+      "lat": 53.5513757,
+      "lng": 9.9577116,
+      "tags": ["weird", "geschichte", "psychedelisch", "musik"],
+      "type": "location",
+      "description_short": "Im 17. Jh. frommste Gegend Nordeuropas. Heute: Strip-Clubs. Unter der Kirche: 350 Totenschädel in der Krypta.",
+      "duration_minutes": 15,
+      "opening_hours": "Außenansicht jederzeit. Kirche: Sa 14–16 Uhr",
+      "image_url": "",
+      "anecdotes": [
+        {
+          "title": "Religionsfreiheit als Stadtgründung",
+          "text": "Die Große Freiheit wurde 1610 angelegt — damals noch dänisches Altona, außerhalb der evangelischen Hamburger Stadtmauern. Graf Ernst von Schaumburg gewährte hier Religionsfreiheit für alle, die Hamburg nicht tolerieren wollte: Mennoniten, Katholiken, Calvinisten. 'Große Freiheit' ist buchstäblich ein politisches Programm. Geblieben sind die Katholiken."
+        },
+        {
+          "title": "350 Totenschädel unter dem Nachtleben",
+          "text": "Am Ende der Straße steht die barocke St. Joseph-Kirche, umgeben von Sexclubs. In der Krypta darunter lagern Totenschädel und Gebeine von etwa 350 Verstorbenen, bestattet zwischen 1719 und 1868. Nach dem Zweiten Weltkrieg geriet die Gruft in Vergessenheit. Kaum jemand in Hamburg weiß, dass dieser Ort existiert."
+        },
+        {
+          "title": "Slime, live an der Großen Freiheit",
+          "text": "Slime — die wichtigste deutsche Hardcore-Punkband — haben ihr zweites Livealbum hier aufgenommen: 'Punkclub Live, Grosse Freiheit in Hamburg', 1995. Das Album heißt nach diesem Ort. Nicht nach einer Stadt oder einem Land, sondern nach dieser einen Straße."
+        }
+      ],
+      "quiz_question": {
+        "question": "Wie viele Totenschädel lagern in der Krypta unter der St. Joseph-Kirche?",
+        "options": ["Ca. 50", "Ca. 150", "Ca. 350", "Ca. 1.000"],
+        "correct_index": 2,
+        "explanation": "Etwa 350 Verstorbene wurden zwischen 1719 und 1868 in der Krypta bestattet. Nach dem Zweiten Weltkrieg geriet die Gruft in Vergessenheit — die Kirche steht seitdem einfach zwischen Sexclubs."
+      }
+    },
+
+    {
+      "id": "station-brewdog",
+      "route_id": "route-altona-stpauli",
+      "order": 9,
+      "name": "BrewDog St. Pauli",
+      "address": "Reeperbahn 1, 20359 Hamburg",
+      "lat": 53.5497149,
+      "lng": 9.9683633,
+      "tags": ["pause", "essen-trinken"],
+      "type": "venue",
+      "description_short": "Craft Beer, Wings, Burger direkt am Beginn der Reeperbahn. Mittagessen-Stopp.",
+      "duration_minutes": 45,
+      "opening_hours": "Sa ab ca. 12 Uhr",
+      "image_url": "",
+      "anecdotes": [],
+      "quiz_question": null
+    },
+
+    {
+      "id": "station-rote-flora",
+      "route_id": "route-altona-stpauli",
+      "order": 10,
+      "name": "Rote Flora",
+      "address": "Schulterblatt 71, 20357 Hamburg",
+      "lat": 53.5620163,
+      "lng": 9.9615147,
+      "tags": ["punk", "politik", "street-art", "geschichte"],
+      "type": "location",
+      "description_short": "Seit 1989 besetzt. Sollte 'Das Phantom der Oper' werden. Das Phantom fand sein Theater nie.",
+      "duration_minutes": 15,
+      "opening_hours": "Außenansicht jederzeit",
+      "image_url": "",
+      "anecdotes": [
+        {
+          "title": "Das Phantom, das sein Theater nie fand",
+          "text": "Die Rote Flora sollte 1989 zu einem Musical-Theater umgebaut werden. Das Programm: 'Das Phantom der Oper'. Kurz vor der geplanten Eröffnung wurde das Gebäude besetzt. Das Phantom fand sein Theater nie. Die Besetzer sind 35 Jahre später noch da."
+        },
+        {
+          "title": "Street Art als Dauerzustand",
+          "text": "Rund um die Rote Flora findet sich die dichteste Street-Art-Konzentration Hamburgs. Schablonen, Texte, politische Symbole, Graffiti über Graffiti. Im Hinterhof ein Skatepark. Alles zusammen ist eigentlich ein einziges Kunstwerk — das sich täglich verändert."
+        }
+      ],
+      "quiz_question": {
+        "question": "Was sollte in der Roten Flora aufgeführt werden, bevor sie besetzt wurde?",
+        "options": [
+          "Cats",
+          "Das Phantom der Oper",
+          "Starlight Express",
+          "Mamma Mia"
+        ],
+        "correct_index": 1,
+        "explanation": "1989 sollte die Rote Flora zum Musical-Theater für 'Das Phantom der Oper' umgebaut werden. Kurz vor der Eröffnung besetzten Aktivisten das Gebäude — das Phantom fand nie seine Bühne."
+      }
+    },
+
+    {
+      "id": "station-feldstern",
+      "route_id": "route-altona-stpauli",
+      "order": 11,
+      "name": "Feldstern",
+      "address": "Sternstraße 2, 20357 Hamburg",
+      "lat": 53.5580553,
+      "lng": 9.9673117,
+      "tags": ["pause", "essen-trinken"],
+      "type": "venue",
+      "description_short": "Endstation. Großer Biergarten, Weihenstephaner Dunkel vom Fass, Küche. Direkt an der U-Bahn Feldstraße.",
+      "duration_minutes": 120,
+      "opening_hours": "Sa ab 16 Uhr",
+      "image_url": "",
+      "anecdotes": [],
+      "quiz_question": null
+    },
+
+    {
+      "id": "station-chilehaus",
+      "route_id": "route-psychedelisch",
+      "order": 1,
+      "name": "Chilehaus — Der Fluchtpunkt",
+      "address": "Burchardstraße / Pumpen, 20095 Hamburg",
+      "lat": 53.5484,
+      "lng": 10.0038,
+      "tags": ["psychedelisch", "architektur", "wow", "geschichte"],
+      "type": "location",
+      "description_short": "Stell Dich auf den Punkt an der Weggabel Burchardstraße/Pumpen. Dreh Dich um. Dann passiert es.",
+      "duration_minutes": 15,
+      "opening_hours": "Außenansicht jederzeit. Innenhöfe: Mo–Fr zugänglich",
+      "image_url": "",
+      "anecdotes": [
+        {
+          "title": "Der einzige Standpunkt der zählt",
+          "text": "Das berühmteste Foto des Chilehauses wurde 1924 von den Fotografen Carl und Adolf Dransfeld aufgenommen — exakt an der Weggabel Burchardstraße/Pumpen. Von dort wirkt der Bau wie ein messerscharfer Schiffsbug in voller Fahrt, der den Verkehr zu zerteilen scheint. Schon zwei Meter weiter wirkt das Gebäude plötzlich breit und unspektakulär. Die Position entscheidet alles."
+        },
+        {
+          "title": "4,8 Millionen Backsteine für einen Mann",
+          "text": "Das Chilehaus wurde 1922–1924 für Henry B. Sloman gebaut — einen der reichsten Männer Hamburgs, der sein Vermögen mit Salpeterhandel aus Chile gemacht hatte. Das Gebäude nahm den Platz von 60 Häusern ein und schuf während der Weltwirtschaftskrise 4.000 Arbeitsplätze. Die weiß angestrichenen Metallgeländer der oberen Etagen wirken wie Relinge von Schiffsdecks."
+        },
+        {
+          "title": "Europaweit spitzester Fassadenwinkel",
+          "text": "Die Gebäudespitze des Chilehauses hat den europaweit spitzesten Fassadenwinkel eines Bürogebäudes. Architekt Fritz Höger setzte das durch, obwohl es zunächst geplant war, das Nachbargrundstück ebenfalls zu bebauen — was die Wirkung vollständig zerstört hätte."
+        }
+      ],
+      "quiz_question": {
+        "question": "Womit hat Bauherr Henry Sloman sein Vermögen für das Chilehaus verdient?",
+        "options": ["Kaffeehandel", "Salpeterhandel aus Chile", "Schiffbau", "Fischerei"],
+        "correct_index": 1,
+        "explanation": "Henry B. Sloman handelte mit Salpeter aus Chile — daher der Name. Salpeter wurde damals als Düngemittel und für Sprengstoff verwendet und machte einige Hamburger Kaufleute steinreich."
+      }
+    },
+
+    {
+      "id": "station-sprinkenhof",
+      "route_id": "route-psychedelisch",
+      "order": 2,
+      "name": "Sprinkenhof — Innenhof",
+      "address": "Burchardstraße 6, 20095 Hamburg",
+      "lat": 53.5492,
+      "lng": 10.0029,
+      "tags": ["psychedelisch", "architektur", "weird"],
+      "type": "location",
+      "description_short": "Durch eine unscheinbare Tür in einen expressionistischen Backsteinschacht — alle Linien laufen nach oben, der Himmel als Fluchtpunkt.",
+      "duration_minutes": 10,
+      "opening_hours": "Innenhof Mo–Fr zugänglich, Sa/So meist geschlossen",
+      "image_url": "",
+      "anecdotes": [
+        {
+          "title": "Das vergessene Nachbargebäude des Chilehauses",
+          "text": "Der Sprinkenhof wurde 1927–1943 direkt neben dem Chilehaus gebaut und ist noch größer — wird aber von fast niemandem beachtet. Der Innenhof ist das Geheimnis: Man tritt durch einen unscheinbaren Torbogen und steht plötzlich in einem mehrgeschossigen Backsteinschacht, in dem alle Linien der Fassaden nach oben laufen und im Himmel verschwinden. Kein Schild, kein Eintritt."
+        }
+      ],
+      "quiz_question": {
+        "question": "In welchem architektonischen Stil sind Chilehaus und Sprinkenhof gebaut?",
+        "options": ["Jugendstil", "Backsteinexpressionismus", "Bauhaus", "Neogotik"],
+        "correct_index": 1,
+        "explanation": "Backsteinexpressionismus — eine norddeutsche Spielart des Expressionismus, die mit dem Material Backstein arbeitet statt mit Beton. Typisch: dramatische Formen, gotisch anmutende Vertikalen, ornamentale Details."
+      }
+    },
+
+    {
+      "id": "station-wasserschloss",
+      "route_id": "route-psychedelisch",
+      "order": 3,
+      "name": "Wasserschloss Speicherstadt",
+      "address": "Poggenmühlenbrücke, 20457 Hamburg",
+      "lat": 53.5428,
+      "lng": 9.9975,
+      "tags": ["psychedelisch", "architektur", "wow", "spiegelung"],
+      "type": "location",
+      "description_short": "Stell Dich exakt auf die Brückenmitte. Beide Kanäle laufen symmetrisch auf das Wasserschloss zu. Einen Meter daneben: die Magie ist weg.",
+      "duration_minutes": 15,
+      "opening_hours": "Jederzeit zugänglich",
+      "image_url": "",
+      "anecdotes": [
+        {
+          "title": "Der Millimeter-Spot",
+          "text": "Dieser Spot funktioniert nur von einer einzigen Position aus: der genauen Mitte der Poggenmühlenbrücke. Von dort laufen beide Fleete links und rechts symmetrisch auf das Wasserschloss zu, das Gebäude sitzt exakt im Mittelpunkt, die Backsteinfassaden begrenzen den Raum eng und verstärken die Tiefenwirkung. Schon einen halben Meter weiter: asymmetrisch, unspektakulär. Die Spiegelung im Wasser verdoppelt die Wirkung."
+        },
+        {
+          "title": "UNESCO-Welterbe auf Holzpfählen",
+          "text": "Die gesamte Speicherstadt steht auf Eichenpfählen im Schlick des Hamburger Hafens — gebaut zwischen 1885 und 1927. Das Wasserschloss am Ende des Holländischen Brooks ist eines der fotogensten Gebäude des Ensembles, das 2015 zum UNESCO-Welterbe erklärt wurde."
+        }
+      ],
+      "quiz_question": {
+        "question": "Worauf steht die gesamte Speicherstadt?",
+        "options": ["Betonplatten", "Stahlträgern", "Eichenpfählen im Schlick", "Natürlichem Felsuntergrund"],
+        "correct_index": 2,
+        "explanation": "Die Speicherstadt wurde zwischen 1885 und 1927 auf Millionen von Eichenpfählen gebaut, die in den weichen Schlick des Hamburger Hafenbodens gerammt wurden. Ohne diese Pfähle würden die Gebäude versinken."
+      }
+    },
+
+    {
+      "id": "station-ericusspitze",
+      "route_id": "route-psychedelisch",
+      "order": 4,
+      "name": "Ericusspitze HafenCity",
+      "address": "Ericusspitze, 20457 Hamburg",
+      "lat": 53.5411,
+      "lng": 10.0051,
+      "tags": ["psychedelisch", "architektur", "spiegelung"],
+      "type": "location",
+      "description_short": "Glasfassaden spiegeln sich so im Wasser, dass oben und unten verschwimmen. Kein klassisches Spiegelbild — eine visuelle Verlängerung ins Nichts.",
+      "duration_minutes": 10,
+      "opening_hours": "Jederzeit zugänglich",
+      "image_url": "",
+      "anecdotes": [
+        {
+          "title": "Oben und unten verschwimmen",
+          "text": "Bei ruhigem Wasser spiegeln sich die Glasfassaden der Ericusspitze so gleichmäßig, dass Spiegelung und reale Struktur nahtlos ineinander übergehen. Das Auge verliert die klare Trennung zwischen Gebäude und Wasser — keine klassische Reflexion, sondern eine visuelle Verlängerung nach unten. Linien laufen weiter, Flächen verbinden sich. Funktioniert nur bei Windstille."
+        }
+      ],
+      "quiz_question": null
+    },
+
+    {
+      "id": "station-japanischer-garten",
+      "route_id": "route-psychedelisch",
+      "order": 5,
+      "name": "Japanischer Garten — Planten un Blomen",
+      "address": "Marseiller Straße, 20355 Hamburg",
+      "lat": 53.5611,
+      "lng": 9.9812,
+      "tags": ["psychedelisch", "natur", "stille", "weird"],
+      "type": "location",
+      "description_short": "Größter japanischer Garten Europas. Mitten in Hamburg. Keine Beschilderung. Nichts wird erklärt. Man ist plötzlich woanders.",
+      "duration_minutes": 30,
+      "opening_hours": "Täglich kostenlos zugänglich. Teehaus: Di–Sa 15–18 Uhr (Mai–Okt)",
+      "image_url": "",
+      "anecdotes": [
+        {
+          "title": "Keine Beschilderung — Absicht",
+          "text": "Im japanischen Garten gibt es keine Erklärtafeln, keine Hinweisschilder, keine Beschriftung der Pflanzen. Das ist kein Versäumnis, sondern Konzept: Der Garten wurde 1988–1990 vom Landschaftsarchitekten Yoshikuni Araki entworfen und folgt dem Prinzip, dass man beobachten soll — nicht lesen. Man soll das Licht verfolgen, das Wasser hören, die Kiesflächen auf sich wirken lassen. Hamburg ist fünf Meter hinter dem Eingangstor, aber es fühlt sich nicht so an."
+        },
+        {
+          "title": "Der größte seiner Art in Europa",
+          "text": "Mit 1,5 Hektar ist der japanische Garten in Planten un Blomen der größte japanische Garten Europas. Er wurde als Zeichen der Freundschaft zwischen Hamburg und Osaka angelegt. Die Kiesflächen werden noch heute regelmäßig per Hand gerecht. Das Teehaus ist ein Holzbau im Sukiya-Stil — schlicht, funktional, reduziert — und öffnet im Sommer für Teezeremonien."
+        }
+      ],
+      "quiz_question": {
+        "question": "Warum gibt es im japanischen Garten keine Beschilderung oder Erklärtafeln?",
+        "options": [
+          "Das Budget reichte nicht",
+          "Man hat es vergessen",
+          "Bewusster Minimalismus — man soll beobachten, nicht lesen",
+          "Die Tafeln wurden gestohlen"
+        ],
+        "correct_index": 2,
+        "explanation": "Architect Yoshikuni Araki hat den Garten so konzipiert, dass Besucher*innen beobachten sollen — Licht, Wasser, Schatten auf Kies. Erklärtafeln würden diese Erfahrung zerstören."
+      }
+    },
+
+    {
+      "id": "station-dockland",
+      "route_id": "route-psychedelisch",
+      "order": 6,
+      "name": "Dockland — Begehbares Dach",
+      "address": "Van-der-Smissen-Straße 9, 22767 Hamburg",
+      "lat": 53.5443,
+      "lng": 9.9267,
+      "tags": ["psychedelisch", "architektur", "wow"],
+      "type": "location",
+      "description_short": "Schräg in die Elbe ragendes Parallelogramm aus Glas und Stahl. Kostenlos begehbares Dach. Elbpanorama auf drei Seiten.",
+      "duration_minutes": 15,
+      "opening_hours": "Dach jederzeit kostenlos zugänglich",
+      "image_url": "",
+      "anecdotes": [
+        {
+          "title": "Das Gebäude das nicht gerade steht",
+          "text": "Das Dockland wurde 2005 als Bürogebäude in Form eines Parallelogramms gebaut — schräg über die Elbe ragend, auf einem Betonsockel im Wasser. Von der Landseite bei Windstille spiegelt sich das Gebäude so im Hafenbecken, dass oben und unten kaum noch zu unterscheiden sind. Die aufsteigenden Kanten ziehen den Blick automatisch nach oben, während das Wasser alles im Bild verankert. Das begehbare Dach ist eine der besten kostenlosen Aussichtsplattformen Hamburgs — und kaum jemand weiß davon."
+        }
+      ],
+      "quiz_question": {
+        "question": "In welcher geometrischen Form ist das Dockland gebaut?",
+        "options": ["Dreieck", "Parallelogramm", "Trapez", "Sechseck"],
+        "correct_index": 1,
+        "explanation": "Das Dockland ist ein Parallelogramm — keine rechten Winkel, schräg über die Elbe ragend. Diese Form macht es architektonisch einzigartig in Hamburg und sorgt für die charakteristische 'Kipp-Wirkung' wenn man draufschaut."
+      }
+    }
+
+  ]
+}

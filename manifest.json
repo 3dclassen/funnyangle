@@ -1,0 +1,19 @@
+{
+  "name": "funnyangle",
+  "short_name": "funnyangle",
+  "description": "Die beste Stadtführung, die du je hattest — ohne Stadtführer.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f0f1a",
+  "theme_color": "#0f0f1a",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

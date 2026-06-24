@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="100" fill="#0f0f1a"/>
+  <text x="256" y="320" text-anchor="middle" font-size="220" font-family="-apple-system, system-ui, sans-serif" font-weight="800" fill="#f59e0b">FA</text>
+  <text x="256" y="400" text-anchor="middle" font-size="62" font-family="-apple-system, system-ui, sans-serif" font-weight="400" fill="#64748b">funnyangle</text>
+</svg>

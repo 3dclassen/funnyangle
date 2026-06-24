@@ -1,0 +1,479 @@
+:root {
+  --bg: #0f0f1a;
+  --surface: #1a1a2e;
+  --surface-high: #16213e;
+  --accent: #f59e0b;
+  --accent-dim: #d97706;
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --green: #22c55e;
+  --border: rgba(255, 255, 255, 0.08);
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  min-height: 52px;
+}
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  padding: 4px 0;
+  min-height: 44px;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  min-height: 44px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+.btn-primary { background: var(--accent); color: #000; }
+.btn-primary:hover { background: var(--accent-dim); }
+
+.btn-secondary {
+  background: var(--surface-high);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-success { background: var(--green); color: #000; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+/* ── Map ── */
+#map {
+  width: 100%;
+  height: min(55vw, 320px);
+  min-height: 220px;
+}
+
+/* ── Filter bar ── */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  overflow-x: auto;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.15s;
+  min-height: 36px;
+  background: var(--surface-high);
+  color: var(--text-secondary);
+}
+
+.chip.active {
+  border-color: currentColor;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.chip-alle          { color: #f59e0b; }
+.chip-punk          { color: #ef4444; }
+.chip-musik         { color: #3b82f6; }
+.chip-psychedelisch { color: #a855f7; }
+.chip-weird         { color: #f59e0b; }
+.chip-architektur   { color: #64748b; }
+.chip-pause         { color: #22c55e; }
+.chip-geschichte    { color: #f97316; }
+.chip-politik       { color: #6366f1; }
+.chip-natur         { color: #10b981; }
+
+/* ── Station list ── */
+.station-list { padding: 4px 0 120px; }
+
+.station-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.1s;
+  min-height: 68px;
+}
+
+.station-item:active { background: rgba(255, 255, 255, 0.03); }
+.station-item.selected { background: rgba(245, 158, 11, 0.07); }
+.station-item.visited { opacity: 0.55; }
+
+.station-checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: all 0.15s;
+}
+
+.station-item.selected .station-checkbox {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+}
+
+.station-item.visited .station-checkbox {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+
+.station-info { flex: 1; min-width: 0; }
+
+.station-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.station-meta {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tag-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border: 1px solid currentColor;
+}
+
+/* ── Bottom bar ── */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  z-index: 1000;
+}
+
+.bottom-bar.hidden { display: none; }
+
+.bottom-info { font-size: 0.85rem; color: var(--text-secondary); }
+.bottom-info strong { color: var(--text); font-size: 0.95rem; display: block; }
+
+/* ── Login screen ── */
+.login-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 52px);
+  padding: 32px 24px;
+  text-align: center;
+  gap: 20px;
+}
+
+.login-screen h1 { font-size: 2.2rem; color: var(--accent); }
+.login-screen p { color: var(--text-secondary); max-width: 260px; line-height: 1.65; }
+
+/* ── User avatar ── */
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid var(--border);
+}
+
+.user-emoji {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface-high);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* ── Station detail ── */
+.station-hero {
+  background: var(--surface);
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.station-hero h1 { font-size: 1.35rem; margin-bottom: 6px; }
+
+.station-address {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+}
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+
+.opening-hours {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+}
+
+.anecdotes-section { padding: 0 16px; padding-bottom: 140px; }
+
+.anecdotes-section h2 {
+  padding: 20px 0 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.anecdote {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.anecdote h3 {
+  font-size: 0.95rem;
+  color: var(--accent);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.anecdote p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ── Station actions (sticky bottom) ── */
+.station-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1000;
+}
+
+.visited-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 8px;
+  color: var(--green);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ── Tour page ── */
+.progress-bar-wrap {
+  padding: 12px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.progress-bar-track {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.progress-label {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+.tour-list { padding: 4px 0 80px; }
+
+.tour-station {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+
+.tour-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--surface-high);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: all 0.2s;
+}
+
+.tour-station.done .tour-step-num {
+  background: var(--green);
+  border-color: var(--green);
+  color: #000;
+}
+
+.tour-station-name { font-weight: 600; font-size: 0.95rem; }
+.tour-station-meta { font-size: 0.78rem; color: var(--text-secondary); margin-top: 4px; display: flex; gap: 8px; align-items: center; }
+.tour-station.done .tour-station-name { text-decoration: line-through; opacity: 0.55; }
+
+/* ── Stub pages ── */
+.stub-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 52px);
+  padding: 32px;
+  text-align: center;
+  color: var(--text-secondary);
+  gap: 14px;
+}
+
+.stub-page .icon { font-size: 3rem; }
+.stub-page h2 { color: var(--text); }
+.stub-page p { font-size: 0.9rem; line-height: 1.6; max-width: 260px; }
+
+/* ── Empty state ── */
+.empty-state {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
+.empty-state p { font-size: 0.9rem; line-height: 1.6; }
+.empty-state a { color: var(--accent); }
+
+/* ── Leaflet overrides ── */
+.leaflet-container { background: #0f0f1a; font-family: inherit; }
+.leaflet-control-zoom a {
+  background: #1a1a2e !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.leaflet-control-zoom a:hover { background: #16213e !important; }
+.leaflet-control-attribution {
+  background: rgba(15, 15, 26, 0.75) !important;
+  color: #64748b !important;
+}
+.leaflet-control-attribution a { color: #94a3b8 !important; }
+.leaflet-tooltip {
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+.leaflet-tooltip-top::before { border-top-color: rgba(255, 255, 255, 0.1); }
+
+/* ── Responsive ── */
+@media (min-width: 480px) {
+  body { max-width: 480px; margin: 0 auto; }
+  .bottom-bar, .station-actions { max-width: 480px; left: 50%; transform: translateX(-50%); }
+  #map { height: 280px; }
+}

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#0f0f1a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>funnyangle</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <span class="logo">funnyangle</span>
+    <div id="user-controls"></div>
+  </header>
+
+  <!-- Login-Ansicht -->
+  <div id="login-view">
+    <div class="login-screen">
+      <h1>funnyangle</h1>
+      <p>Die beste Stadtführung, die du je hattest — ohne Stadtführer.</p>
+      <button class="btn btn-primary" id="login-btn">Mit Google anmelden</button>
+    </div>
+  </div>
+
+  <!-- App-Ansicht (nach Login) -->
+  <div id="app-view" style="display:none">
+    <div id="map"></div>
+
+    <div class="filter-bar" id="filter-bar"></div>
+
+    <div class="station-list" id="station-list">
+      <div class="empty-state">
+        <div class="icon">⏳</div>
+        <p>Stationen werden geladen…</p>
+      </div>
+    </div>
+
+    <div class="bottom-bar hidden" id="bottom-bar">
+      <div class="bottom-info">
+        <strong id="tour-duration">–</strong>
+        <span id="tour-count">0 Stationen</span>
+      </div>
+      <button class="btn btn-primary" id="start-tour-btn">Tour starten</button>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module">
+    import { initApp, state } from './js/app.js';
+    import { signInWithGoogle, signOutUser } from './js/firebase.js';
+    import { initMap, renderPins, getTagColor, refreshPin } from './js/map.js';
+    import { getVisited, saveSelectedTour } from './js/sync.js';
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(console.error);
+    }
+
+    const FILTERS = [
+      { id: 'alle', label: 'Alle', cls: 'chip-alle' },
+      { id: 'punk', label: 'Punk', cls: 'chip-punk' },
+      { id: 'musik', label: 'Musik', cls: 'chip-musik' },
+      { id: 'psychedelisch', label: 'Psychedelisch', cls: 'chip-psychedelisch' },
+      { id: 'weird', label: 'Weird', cls: 'chip-weird' },
+      { id: 'architektur', label: 'Architektur', cls: 'chip-architektur' },
+      { id: 'pause', label: 'Pause', cls: 'chip-pause' },
+      { id: 'geschichte', label: 'Geschichte', cls: 'chip-geschichte' }
+    ];
+
+    let activeFilter = 'alle';
+    let mapReady = false;
+
+    document.getElementById('login-btn').addEventListener('click', () => {
+      signInWithGoogle().catch(err => {
+        console.error('Login fehlgeschlagen:', err);
+        alert('Login fehlgeschlagen. Bitte stelle sicher, dass Pop-ups erlaubt sind.');
+      });
+    });
+
+    initApp({
+      onLoggedIn: (user) => {
+        document.getElementById('login-view').style.display = 'none';
+        document.getElementById('app-view').style.display = '';
+        renderUserControls(user);
+        if (!mapReady) {
+          initMap();
+          mapReady = true;
+        }
+        renderFilterBar();
+        renderStationList();
+        renderPins(getFilteredStations(), (station) => toggleStation(station.id));
+      },
+      onLoggedOut: () => {
+        document.getElementById('login-view').style.display = '';
+        document.getElementById('app-view').style.display = 'none';
+        document.getElementById('user-controls').innerHTML = '';
+      }
+    });
+
+    function renderUserControls(user) {
+      const el = document.getElementById('user-controls');
+      if (user.photoURL) {
+        el.innerHTML = `<img class="user-avatar" src="${user.photoURL}" alt="${user.displayName}" id="sign-out-btn" title="Abmelden">`;
+      } else {
+        const initial = (user.displayName || '?')[0].toUpperCase();
+        el.innerHTML = `<div class="user-emoji" id="sign-out-btn" title="Abmelden">${initial}</div>`;
+      }
+      document.getElementById('sign-out-btn').addEventListener('click', () => {
+        if (confirm('Abmelden?')) signOutUser();
+      });
+    }
+
+    function getFilteredStations() {
+      if (activeFilter === 'alle') return state.stations;
+      return state.stations.filter(s => s.tags && s.tags.includes(activeFilter));
+    }
+
+    function renderFilterBar() {
+      const bar = document.getElementById('filter-bar');
+      bar.innerHTML = FILTERS.map(f =>
+        `<button class="chip ${f.cls}${activeFilter === f.id ? ' active' : ''}" data-filter="${f.id}">${f.label}</button>`
+      ).join('');
+
+      bar.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          activeFilter = chip.dataset.filter;
+          renderFilterBar();
+          renderStationList();
+          renderPins(getFilteredStations(), (station) => toggleStation(station.id));
+        });
+      });
+    }
+
+    function renderStationList() {
+      const container = document.getElementById('station-list');
+      const visited = getVisited();
+      const filtered = getFilteredStations().slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+
+      if (!filtered.length) {
+        container.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>Keine Stationen für diesen Filter.</p></div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(station => {
+        const isSelected = state.selectedStations.includes(station.id);
+        const isVisited = visited.includes(station.id);
+        const checkMark = (isSelected || isVisited) ? '✓' : '';
+        const firstTag = station.tags?.[0] || '';
+        const tagColor = getTagColor(firstTag);
+
+        return `<div class="station-item${isSelected ? ' selected' : ''}${isVisited ? ' visited' : ''}" data-id="${station.id}">
+          <div class="station-checkbox">${checkMark}</div>
+          <div class="station-info">
+            <div class="station-name">${station.name}</div>
+            <div class="station-meta">
+              ${firstTag ? `<span class="tag-badge" style="color:${tagColor};border-color:${tagColor}">${firstTag}</span>` : ''}
+              <span>${station.duration_minutes} Min</span>
+              ${station.type === 'venue' ? '<span>🏠</span>' : ''}
+            </div>
+          </div>
+          <a href="station.html?id=${station.id}" class="btn btn-ghost" style="padding:8px 12px;font-size:0.8rem;min-height:36px" onclick="event.stopPropagation()">Info</a>
+        </div>`;
+      }).join('');
+
+      container.querySelectorAll('.station-item').forEach(item => {
+        item.addEventListener('click', () => toggleStation(item.dataset.id));
+      });
+    }
+
+    function toggleStation(stationId) {
+      const idx = state.selectedStations.indexOf(stationId);
+      if (idx === -1) {
+        state.selectedStations.push(stationId);
+      } else {
+        state.selectedStations.splice(idx, 1);
+      }
+      saveSelectedTour(state.selectedStations);
+      renderStationList();
+      refreshPin(stationId);
+      updateBottomBar();
+    }
+
+    function updateBottomBar() {
+      const bar = document.getElementById('bottom-bar');
+      if (!state.selectedStations.length) {
+        bar.classList.add('hidden');
+        return;
+      }
+      bar.classList.remove('hidden');
+
+      const selected = state.stations.filter(s => state.selectedStations.includes(s.id));
+      const totalMin = selected.reduce((sum, s) => sum + (s.duration_minutes || 0), 0);
+      const h = Math.floor(totalMin / 60);
+      const m = totalMin % 60;
+      document.getElementById('tour-duration').textContent = h > 0 ? `ca. ${h}h ${m}min` : `ca. ${m} Min`;
+      document.getElementById('tour-count').textContent = `${selected.length} Station${selected.length !== 1 ? 'en' : ''}`;
+    }
+
+    document.getElementById('start-tour-btn').addEventListener('click', () => {
+      if (!state.selectedStations.length) return;
+      saveSelectedTour(state.selectedStations);
+      window.location.href = 'tour.html';
+    });
+  </script>
+</body>
+</html>

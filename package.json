@@ -1,0 +1,10 @@
+{
+  "name": "funnyangle",
+  "private": true,
+  "scripts": {
+    "import": "node scripts/import-seed.js"
+  },
+  "devDependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}

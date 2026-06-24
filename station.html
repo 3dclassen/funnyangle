@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#0f0f1a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Station — funnyangle</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="javascript:history.back()" class="back-btn">← Zurück</a>
+    <div id="header-badge"></div>
+  </header>
+
+  <div id="station-content">
+    <div class="empty-state" style="min-height:60vh">
+      <div class="icon">⏳</div>
+      <p>Wird geladen…</p>
+    </div>
+  </div>
+
+  <div class="station-actions" id="station-actions"></div>
+
+  <script type="module">
+    import { initApp, state } from './js/app.js';
+    import { getVisited, markVisited } from './js/sync.js';
+    import { buildTagsHtml, getTagColor } from './js/tour.js';
+
+    const params = new URLSearchParams(window.location.search);
+    const stationId = params.get('id');
+
+    if (!stationId) window.location.replace('index.html');
+
+    initApp({
+      onLoggedIn: () => {
+        const station = state.stations.find(s => s.id === stationId);
+        if (!station) {
+          document.getElementById('station-content').innerHTML =
+            `<div class="empty-state"><div class="icon">❓</div><p>Station nicht gefunden.<br><a href="index.html">Zur Karte</a></p></div>`;
+          return;
+        }
+        render(station);
+      },
+      onLoggedOut: () => window.location.replace('index.html')
+    });
+
+    function render(station) {
+      const visited = getVisited();
+      const isVisited = visited.includes(station.id);
+
+      // Header badge
+      const firstTag = station.tags?.[0] || '';
+      if (firstTag) {
+        const color = getTagColor(firstTag);
+        document.getElementById('header-badge').innerHTML =
+          `<span class="tag-badge" style="color:${color};border-color:${color}">${firstTag}</span>`;
+      }
+
+      // Anekdoten
+      const anecdotesHtml = (station.anecdotes || []).length
+        ? station.anecdotes.map(a => `
+            <div class="anecdote">
+              <h3>${a.title}</h3>
+              <p>${a.text}</p>
+            </div>`).join('')
+        : `<p style="padding:16px 0;color:var(--text-secondary);font-size:0.88rem">Keine Anekdoten für diese Station.</p>`;
+
+      document.getElementById('station-content').innerHTML = `
+        <div class="station-hero">
+          <h1>${station.name}</h1>
+          <div class="station-address">📍 ${station.address}</div>
+          <div class="tags">${buildTagsHtml(station.tags)}</div>
+          ${station.opening_hours ? `<div class="opening-hours">⏰ ${station.opening_hours}</div>` : ''}
+          ${station.description_short ? `<p style="margin-top:10px;font-size:0.85rem;color:var(--text-secondary);line-height:1.55">${station.description_short}</p>` : ''}
+        </div>
+        <div class="anecdotes-section">
+          <h2>Anekdoten</h2>
+          ${anecdotesHtml}
+        </div>`;
+
+      // Actions
+      const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${station.lat},${station.lng}`;
+      const actionsEl = document.getElementById('station-actions');
+
+      if (isVisited) {
+        actionsEl.innerHTML = `
+          <div class="visited-badge">✓ Station abgehakt</div>
+          <a href="${mapsUrl}" target="_blank" rel="noopener" class="btn btn-secondary">🗺 Navigation öffnen</a>`;
+      } else {
+        actionsEl.innerHTML = `
+          <a href="${mapsUrl}" target="_blank" rel="noopener" class="btn btn-secondary">🗺 Navigation öffnen</a>
+          <button class="btn btn-success" id="check-btn">✓ Station abhaken</button>`;
+
+        document.getElementById('check-btn').addEventListener('click', () => {
+          markVisited(station.id);
+          render(station);
+        });
+      }
+    }
+  </script>
+</body>
+</html>

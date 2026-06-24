@@ -1,0 +1,9 @@
+# Firebase service account key — niemals committen!
+scripts/funnyangle-firebase-adminsdk-*.json
+
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
