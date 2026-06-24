@@ -20,8 +20,13 @@
     <div id="user-controls"></div>
   </header>
 
+  <!-- Ladebildschirm -->
+  <div id="loading-view" style="display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 52px)">
+    <p style="color:var(--text-secondary)">Lade…</p>
+  </div>
+
   <!-- Login-Ansicht -->
-  <div id="login-view">
+  <div id="login-view" style="display:none">
     <div class="login-screen">
       <h1>funnyangle</h1>
       <p>Die beste Stadtführung, die du je hattest — ohne Stadtführer.</p>
@@ -44,11 +49,12 @@
     </div>
 
     <div class="bottom-bar hidden" id="bottom-bar">
-      <div class="bottom-info">
+      <button class="btn btn-ghost" id="clear-btn" style="padding:8px 12px;font-size:0.8rem;min-height:36px;flex-shrink:0">× Auswahl</button>
+      <div class="bottom-info" style="text-align:center;flex:1">
         <strong id="tour-duration">–</strong>
         <span id="tour-count">0 Stationen</span>
       </div>
-      <button class="btn btn-primary" id="start-tour-btn">Tour starten</button>
+      <button class="btn btn-primary" id="start-tour-btn" style="flex-shrink:0">Tour starten</button>
     </div>
   </div>
 
@@ -56,7 +62,7 @@
   <script type="module">
     import { initApp, state } from './js/app.js';
     import { signInWithGoogle, signOutUser } from './js/firebase.js';
-    import { initMap, renderPins, getTagColor, refreshPin } from './js/map.js';
+    import { initMap, renderPins, getTagColor, refreshPin, renderPolyline, fitToSelected } from './js/map.js';
     import { getVisited, saveSelectedTour } from './js/sync.js';
 
     if ('serviceWorker' in navigator) {
@@ -86,18 +92,22 @@
 
     initApp({
       onLoggedIn: (user) => {
+        document.getElementById('loading-view').style.display = 'none';
         document.getElementById('login-view').style.display = 'none';
         document.getElementById('app-view').style.display = '';
         renderUserControls(user);
-        if (!mapReady) {
-          initMap();
-          mapReady = true;
-        }
+        if (!mapReady) { initMap(); mapReady = true; }
         renderFilterBar();
         renderStationList();
         renderPins(getFilteredStations(), (station) => toggleStation(station.id));
+        if (state.selectedStations.length) {
+          renderPolyline();
+          fitToSelected();
+          updateBottomBar();
+        }
       },
       onLoggedOut: () => {
+        document.getElementById('loading-view').style.display = 'none';
         document.getElementById('login-view').style.display = '';
         document.getElementById('app-view').style.display = 'none';
         document.getElementById('user-controls').innerHTML = '';
@@ -184,6 +194,17 @@
       saveSelectedTour(state.selectedStations);
       renderStationList();
       refreshPin(stationId);
+      renderPolyline();
+      if (state.selectedStations.length) fitToSelected();
+      updateBottomBar();
+    }
+
+    function clearSelection() {
+      state.selectedStations = [];
+      saveSelectedTour([]);
+      renderStationList();
+      renderPins(getFilteredStations(), (station) => toggleStation(station.id));
+      renderPolyline();
       updateBottomBar();
     }
 
@@ -194,7 +215,6 @@
         return;
       }
       bar.classList.remove('hidden');
-
       const selected = state.stations.filter(s => state.selectedStations.includes(s.id));
       const totalMin = selected.reduce((sum, s) => sum + (s.duration_minutes || 0), 0);
       const h = Math.floor(totalMin / 60);
@@ -202,6 +222,8 @@
       document.getElementById('tour-duration').textContent = h > 0 ? `ca. ${h}h ${m}min` : `ca. ${m} Min`;
       document.getElementById('tour-count').textContent = `${selected.length} Station${selected.length !== 1 ? 'en' : ''}`;
     }
+
+    document.getElementById('clear-btn').addEventListener('click', clearSelection);
 
     document.getElementById('start-tour-btn').addEventListener('click', () => {
       if (!state.selectedStations.length) return;

@@ -1,4 +1,4 @@
-const CACHE = 'funnyangle-v2';
+const CACHE = 'funnyangle-v3';
 
 const STATIC = [
   './',
