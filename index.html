@@ -26,6 +26,7 @@
       <h1>funnyangle</h1>
       <p>Die beste Stadtführung, die du je hattest — ohne Stadtführer.</p>
       <button class="btn btn-primary" id="login-btn">Mit Google anmelden</button>
+      <p id="login-error" style="color:#ef4444;font-size:0.8rem;max-width:280px;line-height:1.5"></p>
     </div>
   </div>
 
@@ -54,7 +55,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module">
     import { initApp, state } from './js/app.js';
-    import { signInWithGoogle, signOutUser, handleRedirectResult } from './js/firebase.js';
+    import { signInWithGoogle, signOutUser } from './js/firebase.js';
     import { initMap, renderPins, getTagColor, refreshPin } from './js/map.js';
     import { getVisited, saveSelectedTour } from './js/sync.js';
 
@@ -76,11 +77,11 @@
     let activeFilter = 'alle';
     let mapReady = false;
 
-    // Redirect-Ergebnis verarbeiten (Rückkehr von Google-Login)
-    handleRedirectResult().catch(err => console.error('Redirect-Fehler:', err));
-
     document.getElementById('login-btn').addEventListener('click', () => {
-      signInWithGoogle().catch(err => console.error('Login-Fehler:', err));
+      signInWithGoogle().catch(err => {
+        console.error('LOGIN ERROR:', err.code, err.message);
+        document.getElementById('login-error').textContent = err.message;
+      });
     });
 
     initApp({

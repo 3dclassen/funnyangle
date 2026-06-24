@@ -2,8 +2,7 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/fireba
 import {
   getAuth,
   GoogleAuthProvider,
-  signInWithRedirect,
-  getRedirectResult,
+  signInWithPopup,
   signOut,
   onAuthStateChanged
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
@@ -32,11 +31,7 @@ export const db = getFirestore(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
 
 export function signInWithGoogle() {
-  return signInWithRedirect(auth, googleProvider);
-}
-
-export function handleRedirectResult() {
-  return getRedirectResult(auth);
+  return signInWithPopup(auth, googleProvider);
 }
 
 export function signOutUser() {
