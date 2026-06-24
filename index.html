@@ -54,7 +54,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module">
     import { initApp, state } from './js/app.js';
-    import { signInWithGoogle, signOutUser } from './js/firebase.js';
+    import { signInWithGoogle, signOutUser, handleRedirectResult } from './js/firebase.js';
     import { initMap, renderPins, getTagColor, refreshPin } from './js/map.js';
     import { getVisited, saveSelectedTour } from './js/sync.js';
 
@@ -76,11 +76,11 @@
     let activeFilter = 'alle';
     let mapReady = false;
 
+    // Redirect-Ergebnis verarbeiten (Rückkehr von Google-Login)
+    handleRedirectResult().catch(err => console.error('Redirect-Fehler:', err));
+
     document.getElementById('login-btn').addEventListener('click', () => {
-      signInWithGoogle().catch(err => {
-        console.error('Login fehlgeschlagen:', err);
-        alert('Login fehlgeschlagen. Bitte stelle sicher, dass Pop-ups erlaubt sind.');
-      });
+      signInWithGoogle().catch(err => console.error('Login-Fehler:', err));
     });
 
     initApp({
