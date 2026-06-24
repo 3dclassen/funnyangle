@@ -12,11 +12,10 @@ export async function initApp({ onLoggedIn, onLoggedOut } = {}) {
   onAuthChange(async (user) => {
     state.user = user;
     if (user) {
-      await ensureUserProfile(user);
+      try { await ensureUserProfile(user); } catch (e) { console.warn('userProfile:', e.code); }
       const data = await loadAllData();
       state.stations = data.stations;
       state.routes = data.routes;
-      // Restore selection from localStorage
       const saved = getSelectedTour();
       if (saved.length) state.selectedStations = [...saved];
       if (onLoggedIn) onLoggedIn(user);
