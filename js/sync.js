@@ -8,7 +8,9 @@ const KEYS = {
   stations: 'fa_stations',
   routes: 'fa_routes',
   visited: 'fa_visited',
-  selectedTour: 'fa_selected_tour'
+  selectedTour: 'fa_selected_tour',
+  savedTours: 'fa_saved_tours',
+  prefs: 'fa_prefs'
 };
 
 export async function loadAllData() {
@@ -53,4 +55,32 @@ export function getSelectedTour() {
 
 export function saveSelectedTour(stationIds) {
   localStorage.setItem(KEYS.selectedTour, JSON.stringify(stationIds));
+}
+
+// ── Saved tours ──
+
+export function getSavedTours() {
+  return JSON.parse(localStorage.getItem(KEYS.savedTours) || '[]');
+}
+
+export function saveTour(name, stationIds) {
+  const tours = getSavedTours();
+  tours.unshift({ name, stationIds, savedAt: Date.now() });
+  localStorage.setItem(KEYS.savedTours, JSON.stringify(tours.slice(0, 20)));
+}
+
+export function deleteSavedTour(index) {
+  const tours = getSavedTours();
+  tours.splice(index, 1);
+  localStorage.setItem(KEYS.savedTours, JSON.stringify(tours));
+}
+
+// ── Preferences ──
+
+export function getPrefs() {
+  return JSON.parse(localStorage.getItem(KEYS.prefs) || '{}');
+}
+
+export function setPrefs(updates) {
+  localStorage.setItem(KEYS.prefs, JSON.stringify({ ...getPrefs(), ...updates }));
 }

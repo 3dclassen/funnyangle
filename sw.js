@@ -1,10 +1,11 @@
-const CACHE = 'funnyangle-v3';
+const CACHE = 'funnyangle-v4';
 
 const STATIC = [
   './',
   './index.html',
   './tour.html',
   './station.html',
+  './settings.html',
   './crew.html',
   './result.html',
   './admin.html',

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#0f0f1a">
+  <title>Einstellungen – funnyangle</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="back-btn">← Karte</a>
+    <span style="font-weight:700;font-size:1rem">Einstellungen</span>
+    <div style="width:52px"></div>
+  </header>
+
+  <div id="loading-view" style="display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 52px)">
+    <p style="color:var(--text-secondary)">Lade…</p>
+  </div>
+
+  <div id="login-view" style="display:none">
+    <div class="stub-page">
+      <div class="icon">🔐</div>
+      <h2>Nicht angemeldet</h2>
+      <p>Melde dich an, um Einstellungen zu speichern.</p>
+      <a href="index.html" class="btn btn-primary">Zur Karte</a>
+    </div>
+  </div>
+
+  <div id="app-view" style="display:none">
+
+    <!-- Profil -->
+    <div class="settings-section">
+      <div class="settings-label">Profil</div>
+      <div class="emoji-grid" id="emoji-grid"></div>
+      <input type="text" id="display-name-input" class="name-input" placeholder="Dein Anzeigename">
+      <button class="btn btn-primary" id="save-profile-btn" style="width:100%">Profil speichern</button>
+      <div id="profile-msg" style="font-size:0.8rem;color:var(--green);margin-top:8px;min-height:1.2em"></div>
+    </div>
+
+    <!-- Gespeicherte Touren -->
+    <div class="settings-section" id="saved-tours-section">
+      <div class="settings-label">Gespeicherte Touren</div>
+      <div id="save-current-tour-block"></div>
+      <div id="saved-tours-list"></div>
+    </div>
+
+    <!-- App-Einstellungen -->
+    <div class="settings-section">
+      <div class="settings-label">App-Einstellungen</div>
+      <div class="settings-row">
+        <div>
+          <div class="settings-row-label">Stationsnamen auf Karte</div>
+          <div class="settings-row-sub">Namen direkt an allen Pins einblenden</div>
+        </div>
+        <button class="toggle-switch" id="labels-toggle"></button>
+      </div>
+    </div>
+
+    <!-- Crew coming soon -->
+    <div class="settings-section">
+      <div class="settings-label">Crew & Gruppen</div>
+      <div class="crew-info-box">
+        <strong>Kommt bald in Sprint 3</strong>
+        Du wirst sehen, wenn jemand aus deiner Crew gerade unterwegs ist — und gemeinsam Touren planen können.
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module">
+    import { initApp, state } from './js/app.js';
+    import { signOutUser, getUserProfile, updateUserProfile } from './js/firebase.js';
+    import { getSelectedTour, getSavedTours, saveTour, deleteSavedTour, getPrefs, setPrefs } from './js/sync.js';
+
+    const EMOJIS = ['🤘','🎸','🏴‍☠️','🍺','🎨','🔮','🦇','👁️','🎭','🏚️','🌀','🎪','🦊','🐙','🌈','🎯','🪩','🎲','🧩','🔑','🕯️','🎺','🥁','🎷'];
+
+    let selectedEmoji = '';
+    let profile = null;
+
+    initApp({
+      onLoggedIn: async (user) => {
+        document.getElementById('loading-view').style.display = 'none';
+        document.getElementById('app-view').style.display = '';
+
+        try {
+          profile = await getUserProfile(user.uid);
+        } catch (e) {
+          profile = null;
+        }
+
+        selectedEmoji = profile?.avatar_emoji || '';
+        renderEmojiGrid();
+        document.getElementById('display-name-input').value = profile?.display_name || user.displayName || '';
+        renderPrefsToggles();
+        renderSavedTours();
+      },
+      onLoggedOut: () => {
+        document.getElementById('loading-view').style.display = 'none';
+        document.getElementById('login-view').style.display = '';
+      }
+    });
+
+    // ── Emoji grid ──
+
+    function renderEmojiGrid() {
+      const grid = document.getElementById('emoji-grid');
+      grid.innerHTML = EMOJIS.map(e =>
+        `<button class="emoji-btn${selectedEmoji === e ? ' active' : ''}" data-emoji="${e}">${e}</button>`
+      ).join('');
+      grid.querySelectorAll('.emoji-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedEmoji = btn.dataset.emoji;
+          renderEmojiGrid();
+        });
+      });
+    }
+
+    // ── Save profile ──
+
+    document.getElementById('save-profile-btn').addEventListener('click', async () => {
+      if (!state.user) return;
+      const name = document.getElementById('display-name-input').value.trim();
+      const msg = document.getElementById('profile-msg');
+      try {
+        await updateUserProfile(state.user.uid, {
+          display_name: name || state.user.displayName,
+          avatar_emoji: selectedEmoji
+        });
+        msg.textContent = 'Gespeichert ✓';
+        setTimeout(() => { msg.textContent = ''; }, 2500);
+      } catch (e) {
+        msg.style.color = '#ef4444';
+        msg.textContent = 'Fehler beim Speichern';
+      }
+    });
+
+    // ── Preferences toggles ──
+
+    function renderPrefsToggles() {
+      const prefs = getPrefs();
+      const labelsBtn = document.getElementById('labels-toggle');
+      labelsBtn.classList.toggle('on', !!prefs.showLabels);
+      labelsBtn.addEventListener('click', () => {
+        const current = getPrefs();
+        const next = !current.showLabels;
+        setPrefs({ showLabels: next });
+        labelsBtn.classList.toggle('on', next);
+      });
+    }
+
+    // ── Saved tours ──
+
+    function renderSavedTours() {
+      const currentIds = getSelectedTour();
+      const block = document.getElementById('save-current-tour-block');
+
+      if (currentIds.length) {
+        block.innerHTML = `
+          <input type="text" id="save-tour-name" class="name-input" placeholder="Tourname z.B. Punk Samstag…">
+          <button class="btn btn-secondary" id="save-tour-btn" style="width:100%;margin-bottom:16px">Aktuelle Tour speichern (${currentIds.length} Stationen)</button>`;
+        document.getElementById('save-tour-btn').addEventListener('click', () => {
+          const name = document.getElementById('save-tour-name').value.trim();
+          if (!name) { document.getElementById('save-tour-name').focus(); return; }
+          saveTour(name, currentIds);
+          document.getElementById('save-tour-name').value = '';
+          renderSavedTours();
+        });
+      } else {
+        block.innerHTML = `<p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:14px">Keine aktuelle Tour ausgewählt. Geh zur Karte und wähle Stationen aus.</p>`;
+      }
+
+      const tours = getSavedTours();
+      const listEl = document.getElementById('saved-tours-list');
+
+      if (!tours.length) {
+        listEl.innerHTML = `<p style="font-size:0.85rem;color:var(--text-secondary);padding:4px 0 16px">Noch keine Touren gespeichert.</p>`;
+        return;
+      }
+
+      listEl.innerHTML = tours.map((tour, i) => {
+        const d = new Date(tour.savedAt);
+        const dateStr = d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric' });
+        return `<div class="saved-tour-item">
+          <div style="flex:1;min-width:0">
+            <div class="saved-tour-name">${esc(tour.name)}</div>
+            <div class="saved-tour-meta">${tour.stationIds.length} Stationen · ${dateStr}</div>
+          </div>
+          <button class="btn btn-secondary" data-load="${i}" style="padding:6px 12px;font-size:0.8rem;min-height:36px;flex-shrink:0">Laden</button>
+          <button class="btn btn-ghost" data-del="${i}" style="padding:6px 10px;font-size:0.8rem;min-height:36px;flex-shrink:0;margin-left:4px">✕</button>
+        </div>`;
+      }).join('');
+
+      listEl.querySelectorAll('[data-load]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tour = tours[parseInt(btn.dataset.load)];
+          import('./js/sync.js').then(({ saveSelectedTour }) => {
+            saveSelectedTour(tour.stationIds);
+            window.location.href = 'index.html';
+          });
+        });
+      });
+
+      listEl.querySelectorAll('[data-del]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (confirm('Tour löschen?')) {
+            deleteSavedTour(parseInt(btn.dataset.del));
+            renderSavedTours();
+          }
+        });
+      });
+    }
+
+    function esc(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+  </script>
+</body>
+</html>

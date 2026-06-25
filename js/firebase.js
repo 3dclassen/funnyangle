@@ -11,6 +11,7 @@ import {
   doc,
   setDoc,
   getDoc,
+  updateDoc,
   serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
@@ -49,8 +50,20 @@ export async function ensureUserProfile(user) {
     await setDoc(ref, {
       uid: user.uid,
       display_name: user.displayName || 'Anonym',
+      avatar_emoji: '',
       role: 'user',
       created_at: serverTimestamp()
     });
   }
+}
+
+export async function getUserProfile(uid) {
+  const ref = doc(db, 'users', uid);
+  const snap = await getDoc(ref);
+  return snap.exists() ? snap.data() : null;
+}
+
+export async function updateUserProfile(uid, data) {
+  const ref = doc(db, 'users', uid);
+  await updateDoc(ref, data);
 }

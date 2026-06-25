@@ -16,8 +16,11 @@
 <body>
 
   <header class="header">
-    <span class="logo">funnyangle</span>
-    <div id="user-controls"></div>
+    <span class="logo" id="logo-btn">funnyangle</span>
+    <div style="display:flex;align-items:center;gap:10px">
+      <a href="settings.html" style="color:var(--text-secondary);font-size:1.2rem;text-decoration:none;min-height:44px;min-width:36px;display:flex;align-items:center;justify-content:center" title="Einstellungen">⚙️</a>
+      <div id="user-controls"></div>
+    </div>
   </header>
 
   <!-- Ladebildschirm -->
@@ -48,46 +51,81 @@
       </div>
     </div>
 
+    <!-- Bottom action bar -->
     <div class="bottom-bar hidden" id="bottom-bar">
-      <button class="btn btn-ghost" id="clear-btn" style="padding:8px 12px;font-size:0.8rem;min-height:36px;flex-shrink:0">× Auswahl</button>
-      <div class="bottom-info" style="text-align:center;flex:1">
+      <button class="btn btn-ghost" id="clear-btn" style="padding:8px 10px;font-size:0.85rem;min-height:44px;min-width:44px;flex-shrink:0">×</button>
+      <div class="bottom-info" style="flex:1;text-align:center">
         <strong id="tour-duration">–</strong>
         <span id="tour-count">0 Stationen</span>
       </div>
-      <button class="btn btn-primary" id="start-tour-btn" style="flex-shrink:0">Tour starten</button>
+      <button class="btn btn-secondary" id="tour-panel-btn" style="padding:8px 12px;font-size:0.85rem;min-height:44px;flex-shrink:0">↑ Tour</button>
+      <button class="btn btn-primary" id="start-tour-btn" style="padding:8px 14px;min-height:44px;flex-shrink:0">Start</button>
     </div>
   </div>
+
+  <!-- Tour bottom sheet -->
+  <div class="panel-backdrop" id="panel-backdrop"></div>
+  <div class="tour-panel" id="tour-panel">
+    <div class="tour-panel-handle"></div>
+    <div class="tour-panel-header">
+      <div>
+        <div class="tour-panel-title">Meine Tour</div>
+        <div class="tour-panel-meta" id="tour-panel-meta"></div>
+      </div>
+      <button class="tour-panel-close-btn" id="tour-panel-close">×</button>
+    </div>
+    <div class="tour-panel-list" id="tour-panel-list"></div>
+    <div class="tour-panel-actions">
+      <button class="btn btn-secondary" id="share-btn" style="flex:1">Teilen</button>
+      <button class="btn btn-primary" id="start-tour-btn2" style="flex:1">Tour starten</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module">
     import { initApp, state } from './js/app.js';
     import { signInWithGoogle, signOutUser } from './js/firebase.js';
-    import { initMap, renderPins, getTagColor, refreshPin, renderPolyline, fitToSelected } from './js/map.js';
-    import { getVisited, saveSelectedTour } from './js/sync.js';
+    import { initMap, renderPins, getTagColor, refreshPin, refreshAllPins, renderPolyline, fitToSelected } from './js/map.js';
+    import { getVisited, saveSelectedTour, getPrefs } from './js/sync.js';
+    import { optimizeRoute } from './js/tour.js';
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js').catch(console.error);
     }
 
     const FILTERS = [
-      { id: 'alle', label: 'Alle', cls: 'chip-alle' },
-      { id: 'punk', label: 'Punk', cls: 'chip-punk' },
-      { id: 'musik', label: 'Musik', cls: 'chip-musik' },
+      { id: 'alle',          label: 'Alle',          cls: 'chip-alle' },
+      { id: 'punk',          label: 'Punk',          cls: 'chip-punk' },
+      { id: 'musik',         label: 'Musik',         cls: 'chip-musik' },
       { id: 'psychedelisch', label: 'Psychedelisch', cls: 'chip-psychedelisch' },
-      { id: 'weird', label: 'Weird', cls: 'chip-weird' },
-      { id: 'architektur', label: 'Architektur', cls: 'chip-architektur' },
-      { id: 'pause', label: 'Pause', cls: 'chip-pause' },
-      { id: 'geschichte', label: 'Geschichte', cls: 'chip-geschichte' }
+      { id: 'weird',         label: 'Weird',         cls: 'chip-weird' },
+      { id: 'architektur',   label: 'Architektur',   cls: 'chip-architektur' },
+      { id: 'pause',         label: 'Pause',         cls: 'chip-pause' },
+      { id: 'geschichte',    label: 'Geschichte',    cls: 'chip-geschichte' }
     ];
 
     let activeFilter = 'alle';
     let mapReady = false;
 
+    // ── Auth ──
+
     document.getElementById('login-btn').addEventListener('click', () => {
       signInWithGoogle().catch(err => {
-        console.error('LOGIN ERROR:', err.code, err.message);
         document.getElementById('login-error').textContent = err.message;
       });
+    });
+
+    document.getElementById('logo-btn').addEventListener('click', () => {
+      if (confirm('Auswahl zurücksetzen und zur Startansicht?')) {
+        clearSelection();
+        activeFilter = 'alle';
+        renderFilterBar();
+        renderStationList();
+        renderPins(getFilteredStations(), station => toggleStation(station.id));
+      }
     });
 
     initApp({
@@ -96,10 +134,25 @@
         document.getElementById('login-view').style.display = 'none';
         document.getElementById('app-view').style.display = '';
         renderUserControls(user);
+
         if (!mapReady) { initMap(); mapReady = true; }
+
+        // Handle shared tour URL param
+        const params = new URLSearchParams(location.search);
+        const tourParam = params.get('tour');
+        if (tourParam) {
+          const ids = tourParam.split(',').filter(id => state.stations.find(s => s.id === id));
+          if (ids.length) {
+            state.selectedStations = ids;
+            saveSelectedTour(ids);
+          }
+          history.replaceState({}, '', location.pathname);
+        }
+
         renderFilterBar();
         renderStationList();
-        renderPins(getFilteredStations(), (station) => toggleStation(station.id));
+        renderPins(getFilteredStations(), station => toggleStation(station.id));
+
         if (state.selectedStations.length) {
           renderPolyline();
           fitToSelected();
@@ -114,6 +167,8 @@
       }
     });
 
+    // ── User controls ──
+
     function renderUserControls(user) {
       const el = document.getElementById('user-controls');
       if (user.photoURL) {
@@ -127,6 +182,8 @@
       });
     }
 
+    // ── Filters + station list ──
+
     function getFilteredStations() {
       if (activeFilter === 'alle') return state.stations;
       return state.stations.filter(s => s.tags && s.tags.includes(activeFilter));
@@ -137,13 +194,12 @@
       bar.innerHTML = FILTERS.map(f =>
         `<button class="chip ${f.cls}${activeFilter === f.id ? ' active' : ''}" data-filter="${f.id}">${f.label}</button>`
       ).join('');
-
       bar.querySelectorAll('.chip').forEach(chip => {
         chip.addEventListener('click', () => {
           activeFilter = chip.dataset.filter;
           renderFilterBar();
           renderStationList();
-          renderPins(getFilteredStations(), (station) => toggleStation(station.id));
+          renderPins(getFilteredStations(), station => toggleStation(station.id));
         });
       });
     }
@@ -161,10 +217,10 @@
       container.innerHTML = filtered.map(station => {
         const isSelected = state.selectedStations.includes(station.id);
         const isVisited = visited.includes(station.id);
-        const checkMark = (isSelected || isVisited) ? '✓' : '';
+        const tourNum = isSelected ? state.selectedStations.indexOf(station.id) + 1 : '';
+        const checkMark = isSelected ? tourNum : (isVisited ? '✓' : '');
         const firstTag = station.tags?.[0] || '';
         const tagColor = getTagColor(firstTag);
-
         return `<div class="station-item${isSelected ? ' selected' : ''}${isVisited ? ' visited' : ''}" data-id="${station.id}">
           <div class="station-checkbox">${checkMark}</div>
           <div class="station-info">
@@ -184,29 +240,41 @@
       });
     }
 
+    // ── Tour selection + optimization ──
+
     function toggleStation(stationId) {
       const idx = state.selectedStations.indexOf(stationId);
       if (idx === -1) {
         state.selectedStations.push(stationId);
+        state.selectedStations = optimizeRoute(state.selectedStations);
       } else {
         state.selectedStations.splice(idx, 1);
+        if (state.selectedStations.length >= 3) {
+          state.selectedStations = optimizeRoute(state.selectedStations);
+        }
       }
       saveSelectedTour(state.selectedStations);
       renderStationList();
       refreshPin(stationId);
+      // Refresh all selected pin numbers (order may have changed)
+      state.selectedStations.forEach(id => { if (id !== stationId) refreshPin(id); });
       renderPolyline();
       if (state.selectedStations.length) fitToSelected();
       updateBottomBar();
+      if (tourPanelOpen) renderTourPanel();
     }
 
     function clearSelection() {
       state.selectedStations = [];
       saveSelectedTour([]);
       renderStationList();
-      renderPins(getFilteredStations(), (station) => toggleStation(station.id));
+      renderPins(getFilteredStations(), station => toggleStation(station.id));
       renderPolyline();
       updateBottomBar();
+      closeTourPanel();
     }
+
+    // ── Bottom bar ──
 
     function updateBottomBar() {
       const bar = document.getElementById('bottom-bar');
@@ -230,6 +298,111 @@
       saveSelectedTour(state.selectedStations);
       window.location.href = 'tour.html';
     });
+
+    // ── Tour bottom sheet panel ──
+
+    let tourPanelOpen = false;
+
+    function openTourPanel() {
+      renderTourPanel();
+      document.getElementById('tour-panel').classList.add('open');
+      document.getElementById('panel-backdrop').classList.add('open');
+      tourPanelOpen = true;
+    }
+
+    function closeTourPanel() {
+      document.getElementById('tour-panel').classList.remove('open');
+      document.getElementById('panel-backdrop').classList.remove('open');
+      tourPanelOpen = false;
+    }
+
+    function renderTourPanel() {
+      const stations = state.selectedStations
+        .map(id => state.stations.find(s => s.id === id))
+        .filter(Boolean);
+
+      const totalMin = stations.reduce((sum, s) => sum + (s.duration_minutes || 0), 0);
+      const h = Math.floor(totalMin / 60);
+      const m = totalMin % 60;
+      const durationStr = h > 0 ? `ca. ${h}h ${m}min` : `ca. ${m} Min`;
+
+      document.getElementById('tour-panel-meta').textContent =
+        `${stations.length} Station${stations.length !== 1 ? 'en' : ''} · ${durationStr}`;
+
+      const list = document.getElementById('tour-panel-list');
+      list.innerHTML = stations.map((s, i) => {
+        const firstTag = s.tags?.[0] || '';
+        return `<div class="tour-panel-item" data-id="${s.id}">
+          <div class="tour-panel-num">${i + 1}</div>
+          <div style="flex:1;min-width:0">
+            <div class="tour-panel-name">${s.name}</div>
+            <div class="tour-panel-sub">${s.duration_minutes} Min${firstTag ? ' · ' + firstTag : ''}</div>
+          </div>
+          <div class="tour-move-btns">
+            <button class="tour-move-btn" data-dir="up" data-idx="${i}" ${i === 0 ? 'disabled' : ''}>↑</button>
+            <button class="tour-move-btn" data-dir="down" data-idx="${i}" ${i === stations.length - 1 ? 'disabled' : ''}>↓</button>
+          </div>
+          <a href="station.html?id=${s.id}" class="btn btn-ghost" style="padding:6px 10px;font-size:0.85rem;min-height:36px;flex-shrink:0">→</a>
+        </div>`;
+      }).join('');
+
+      list.querySelectorAll('.tour-move-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          const idx = parseInt(btn.dataset.idx);
+          const dir = btn.dataset.dir;
+          const swapIdx = dir === 'up' ? idx - 1 : idx + 1;
+          if (swapIdx < 0 || swapIdx >= state.selectedStations.length) return;
+          [state.selectedStations[idx], state.selectedStations[swapIdx]] =
+            [state.selectedStations[swapIdx], state.selectedStations[idx]];
+          saveSelectedTour(state.selectedStations);
+          renderStationList();
+          refreshAllPins();
+          renderPolyline();
+          renderTourPanel();
+        });
+      });
+    }
+
+    document.getElementById('tour-panel-btn').addEventListener('click', () => {
+      if (state.selectedStations.length) openTourPanel();
+    });
+
+    document.getElementById('tour-panel-close').addEventListener('click', closeTourPanel);
+    document.getElementById('panel-backdrop').addEventListener('click', closeTourPanel);
+
+    document.getElementById('start-tour-btn2').addEventListener('click', () => {
+      saveSelectedTour(state.selectedStations);
+      window.location.href = 'tour.html';
+    });
+
+    // ── Tour sharing ──
+
+    document.getElementById('share-btn').addEventListener('click', shareTour);
+
+    function shareTour() {
+      if (!state.selectedStations.length) return;
+      const ids = state.selectedStations.join(',');
+      const url = `${location.origin}${location.pathname}?tour=${ids}`;
+      if (navigator.share) {
+        navigator.share({ title: 'Meine funnyangle Tour', url }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(url).then(() => showToast('Link kopiert!')).catch(() => {
+          prompt('Tour-Link kopieren:', url);
+        });
+      }
+    }
+
+    // ── Toast ──
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('visible');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('visible'), 2400);
+    }
   </script>
 </body>
 </html>
